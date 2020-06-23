@@ -137,11 +137,12 @@ input:focus{
     
         <div id="loginForm" style="display: none; text-align: center;">
             <h1 style="background-color:rgba(41, 178, 153, 0.205) ; margin: 0; padding: 20px;">Login</h1>
+            <p v-if="error">{{errorMsg}}</p>
             <div class="inputFieldWraper">
                 <div>
-                    <input type="text" placeholder="Mobile">
-                    <input type="text" placeholder="Password">
-                    <button class="button_primary">Sign In</button><br>
+                    <input type="text" placeholder="Mobile" v-model="mobile">
+                    <input type="text" placeholder="Password" v-model="password">
+                    <button @click="signIn" class="button_primary">Sign In</button><br>
                     <a class="alreadyHaveAcc" href="#signUpForm" @click="signUpForm">Create New Account</a>
                 </div>
             </div>
@@ -209,6 +210,44 @@ input:focus{
                                 },3000)
                             }
                         }
+                    }
+                },
+                signIn(){
+                    if(!this.password|| this.mobile.length!=10){
+                        this.error=true
+                        this.errorMsg="Fill with correct details"
+                        
+                        setTimeout(()=>{
+                            this.error=false
+                            this.errorMsg=""
+                        },3000)
+                    }else{
+                        axios.post("/signin", {
+                            mobile:this.mobile,
+                            password:this.password
+                        })
+                        .then((response)=>{
+                            window.location.href="/"
+                        })
+                        .catch((err)=>{
+                            if(err.response.status===409){
+                                    this.error=true
+                                    this.errorMsg="Incorrect Password"
+                                    
+                                    setTimeout(()=>{
+                                        this.error=false
+                                        this.errorMsg=""
+                                    },3000)
+                            }else{
+                                    this.error=true
+                                    this.errorMsg="User not found"
+                                    
+                                    setTimeout(()=>{
+                                        this.error=false
+                                        this.errorMsg=""
+                                    },3000)
+                            }
+                        })
                     }
                 }
             }

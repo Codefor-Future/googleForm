@@ -111,5 +111,22 @@ router.post("/signup",async(req,res)=>{
     }
 })
 
+router.post("/signin",async(req,res)=>{
+    const mobile= req.body.mobile
+    const password= req.body.password
+
+    const user=await User.findOne({mobile:mobile})
+    if(user){
+        if(user.password===password){
+            const payload=user.id
+            const token= jwt.sign(payload,"kallapanni")
+            res.cookie("token",token).send()
+        }else{
+            res.status(409).send()
+        }
+    }else{
+        res.status(404).send()
+    }
+})
 
 module.exports= router
