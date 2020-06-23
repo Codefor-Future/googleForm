@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>My form</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js" integrity="sha256-bd8XIKzrtyJ1O5Sh3Xp3GiuMIzWC42ZekvrMMD4GxRg=" crossorigin="anonymous"></script>
 </head>
 <!-- style -->
 <style>
@@ -103,11 +105,14 @@ body{
     max-width: 400px;
     text-align: center;
 }
-
+input:focus{
+    outline: none;
+}
 </style>
 
 <!-- /style -->
 <body>
+    <div id="app">
     <div id="welcome">
         <div style="font-size: 14px;text-align: center; padding:10px 0;margin: 0; color: rgba(255, 255, 255, 0.856); height: 65vh; background-image: linear-gradient(35deg,rgb(4, 155, 127),rgb(4, 134, 111),rgb(6, 153, 126));">
             <div style="text-align: center;; margin: 0;">
@@ -121,50 +126,93 @@ body{
         </div>
         <div class="LinksToCreateAccount">
             <div class="links">
-                <button class="createNewButton" onclick="signUpForm()">
+                <button class="createNewButton" @click="signUpForm">
                     <a href="#signUpForm">Create new Account</a>
                 </button>
                 <br>
-                <a class="alreadyHaveAcc" href="#loginForm" onclick="loginForm()">Already have account</a>
+                <a class="alreadyHaveAcc" href="#loginForm" @click="loginForm">Already have account</a>
             </div>
         </div>
     </div>
-
-    <div id="loginForm" style="display: none; text-align: center;">
-        <h1 style="background-color:rgba(41, 178, 153, 0.205) ; margin: 0; padding: 20px;">Login</h1>
-        <div class="inputFieldWraper">
-            <div>
-                <input type="text" placeholder="Mobile">
-                <input type="text" placeholder="Password">
-                <button class="button_primary">Sign In</button><br>
-                <a class="alreadyHaveAcc" href="#signUpForm" onclick="signUpForm()">Create New Account</a>
+    
+        <div id="loginForm" style="display: none; text-align: center;">
+            <h1 style="background-color:rgba(41, 178, 153, 0.205) ; margin: 0; padding: 20px;">Login</h1>
+            <div class="inputFieldWraper">
+                <div>
+                    <input type="text" placeholder="Mobile">
+                    <input type="text" placeholder="Password">
+                    <button class="button_primary">Sign In</button><br>
+                    <a class="alreadyHaveAcc" href="#signUpForm" @click="signUpForm">Create New Account</a>
+                </div>
+            </div>
+        </div>
+        <div id="signUpForm" style="display: none;text-align: center;">
+            <h1 style="background-color:rgba(41, 178, 153, 0.205) ; margin: 0; padding: 20px;">Create Account</h1>
+            <p v-if="error">{{errorMsg}}</p>
+            <div class="inputFieldWraper-signUp">
+                <div>
+                    <input type="text" placeholder="Name" v-model="name">
+                    <input type="text" placeholder="Mobile" v-model="mobile">
+                    <input type="text" placeholder="Password" v-model="password">
+                    <button class="button_primary" @click="signUp">Sign Up</button><br>
+                    <a class="alreadyHaveAcc" href="#LoginForm" @click="loginForm">Sign In</a>
+                </div>
             </div>
         </div>
     </div>
-    <div id="signUpForm" style="display: none;text-align: center;">
-        <h1 style="background-color:rgba(41, 178, 153, 0.205) ; margin: 0; padding: 20px;">Create Account</h1>
-        <div class="inputFieldWraper-signUp">
-            <div>
-                <input type="text" placeholder="Name">
-                <input type="text" placeholder="Mobile">
-                <input type="text" placeholder="Password">
-                <button class="button_primary">Sign Up</button><br>
-                <a class="alreadyHaveAcc" href="#LoginForm" onclick="loginForm()">Sign In</a>
-            </div>
-        </div>
-    </div>
-
     <!-- scripts  -->
     <script>
-        loginForm=()=>{
-            document.getElementById("loginForm").style.display="block"
-            document.getElementById("signUpForm").style.display="none"
-        }
-        signUpForm=()=>{
-            document.getElementById("loginForm").style.display="none"
-            document.getElementById("signUpForm").style.display="block"
-            document.getElementById("welcome").style.display="none"
-        }
+        
+        const app= new Vue({
+            el:"#app",
+            data:{
+                name:"",
+                mobile:null,
+                password:null,
+                error:false,
+                errorMsg:""
+            },
+            methods:{
+                loginForm(){
+                    document.getElementById("loginForm").style.display="block"
+                    document.getElementById("signUpForm").style.display="none"
+                },
+                signUpForm(){
+                    document.getElementById("loginForm").style.dist909090909play="none"
+                    document.getElementById("signUpForm").style.display="block"
+                    document.getElementById("welcome").style.display="none"
+                },
+                async signUp(){
+                    if(!this.name|| this.mobile.length!=10){
+                        this.error=true
+                        this.errorMsg="Fill the form with correct details"
+                        setTimeout(()=>{
+                            this.error=false
+                            this.errorMsg=""
+                        },3000)
+                    }else{
+                        try{
+                            const resp=await axios.post("/signup",{
+                            name:this.name,
+                            mobile:this.mobile,
+                            password:this.password
+                            },{withCredentials:true})
+                            window.location.href="/"
+
+                        }catch(err){
+                            if(err.response.status===409){
+                                this.error=true
+                                this.errorMsg="User already Exists"
+                                setTimeout(()=>{
+                                    this.error=false
+                                    this.errorMsg=""
+                                },3000)
+                            }
+                        }
+                    }
+                }
+            }
+        })
     </script>
     <!-- /scripts  -->
 </body>

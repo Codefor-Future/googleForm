@@ -12,7 +12,14 @@ const UserSchema= mongoose.Schema({
     password:{
         type:String,
         require:true
-    }
+    },
+    forms:[
+        {
+            formName:String,
+            inputs:Object,
+            responses:Array
+        }
+    ]
 })
 
 module.exports= mongoose.model("User", UserSchema)
