@@ -114,7 +114,9 @@
                             }
                             
                         }
-                        this.inputs.form.responses[element]=document.getElementById("previewForm").querySelectorAll(".input")[element].value
+                        let value=document.getElementById("previewForm").querySelectorAll(".input")[element].value.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\t/g, "\\t");
+                        this.inputs.form.responses[element]=value
+                        console.log(value)
                     }
                     axios.post("/form",{
                         url:window.location.href,
@@ -131,7 +133,8 @@
                         this.errorMsg="Fill all required fields"
                         },3000)
                         return;
-                    })
+                    }
+                    )
 
                 }
                 
