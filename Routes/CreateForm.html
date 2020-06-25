@@ -87,7 +87,7 @@
     </style>
     <div id="app">
         
-        <div style=" text-align: center;">
+        <div id="main" style=" text-align: center;">
             <h1 style="background-color:rgba(41, 178, 153, 0.205) ; margin: 0; padding: 20px;height: 7vh; color: rgba(0, 0, 0, 0.61);">Create New Form</h1>
             <div id="previewForm">
                 
@@ -124,11 +124,12 @@
             </div>
         </div>
 
-    <div v-if="formUrl" style="position: absolute; top: 0px; left: 0px; height: 130vh; background-color: burlywood;">
-        <h3>Form Created</h3>
+    <div id="formCreated" v-if="formUrl" style="text-align:center; padding:40px; height: 130vh; background-color: rgb(255, 255, 255);">
+        <h3 >Form Created</h3>
         <a :href="formUrl"><button> Go to form </button></a>
         <a href="/"><button> Go Home</button></a>
-        <p style="font-size: 10px; ">{{formUrl}}</p>
+        <!-- <p style="font-size: 10px; ">{{formUrl}}</p> -->
+        <button @click="copyText">Copy Link</button><br>
     </div>
     </div>
 
@@ -205,12 +206,48 @@
                             inputes:this.inputes
                         },{withCredentials:true})
                         .then((response)=>{
+                            document.getElementById('main').style.display='none'
                             this.formUrl=response.data
                         })
                         .catch((err)=>{
                             this.error=true
                         })
                     }
+                },
+                copyText(){
+
+                        var textArea = document.createElement("textarea");
+
+                            // Place in top-left corner of screen regardless of scroll position.
+                            textArea.style.position = '';
+                            textArea.style.top = '';
+                            
+
+                            // Ensure it has a small width and height. Setting to 1px / 1em
+                            // doesn't work as this gives a negative w/h on some browsers.
+                            textArea.style.width = '60vw';
+                            textArea.style.height = '60px';
+
+
+                            // We don't need padding, reducing the size if it does flash render.
+                            textArea.style.padding = '20px';
+                            textArea.style.margin="30px auto"
+
+                            // Clean up any borders.
+                            
+                            // Avoid flash of white box if rendered for any reason.
+                            textArea.style.background = 'white';
+
+
+                            textArea.value = this.formUrl;
+
+                            document.getElementById('formCreated').appendChild(textArea);
+                            textArea.focus();
+                            textArea.select();
+
+
+                            document.execCommand('copy')
+                        
                 }
             }
         })
