@@ -114,6 +114,29 @@
             font-size: 15px;
             box-shadow: none;
         }
+        .copyLinkBtn{
+            margin: 0;
+            padding: 0;
+            font-size: 10px;
+            color: rgba(13, 180, 124, 0.842);
+        }
+        .tempInput{
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -2;
+            display: none;
+            color: transparent;
+            border: transparent;
+            background-color: transparent;
+            
+        }
+        .tempInput:focus{
+            outline: transparent;
+        }
+        .tempInput::selection{
+            display: none;
+        }
     </style>
     <div id="app">
         
@@ -131,7 +154,9 @@
             <div class="form" v-for="(form,index) in dat.forms">
                 <div class="formName">{{form.formName}}</div>
                 <div class="formRespCount">{{form.responses.length}}</div>
-                <button @click="showResponse(index)">Show responses</button> <br><br>
+                <button @click="showResponse(index)">Show responses</button><br>
+                <a @click="copyLink(index)" class="copyLinkBtn">Copy form link</a>
+                <br><br>
             </div>
         </div>
         <div v-if="newUser" class="newUser">
@@ -154,6 +179,16 @@
             methods:{
                 showResponse(index){
                     window.location.href=`/resp/${index}`
+                },
+                copyLink(index){
+                    var tempInput= document.createElement('input')
+                    tempInput.className="tempInput";
+                    tempInput.value= "https://myfrm.herokuapp.com/form/"+this.dat.userId+ "/"+ index
+                    document.body.appendChild(tempInput)
+                    tempInput.focus();
+                    tempInput.select();
+                    document.execCommand('copy')
+                    window.alert("Link copied\n"+tempInput.value)
                 }
             },
             mounted(){

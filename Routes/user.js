@@ -39,6 +39,7 @@ router.get("/resp/:index",auth, async(req,res)=>{
     const responses= user.forms[formIndex].responses;
     const structureOfForm=user.forms[formIndex].inputs;
     const formName=user.forms[formIndex].formName
+    
     res.render("formResponses",{data:JSON.stringify({responses:responses,structure:structureOfForm,formName:formName})})
 })
 router.post("/form",async(req,res)=>{
@@ -99,7 +100,8 @@ router.get("/",auth, async(req,res)=>{
 
     if(req.auth){
         const user=await User.findById(req.auth.id)
-        res.render('home',{data:JSON.stringify({forms:user.forms})})
+        const userId=jwt.sign(req.auth.id,"panni")
+        res.render('home',{data:JSON.stringify({forms:user.forms,userId:userId})})
     }else{
         res.sendFile(__dirname+"/login.html")
         console.log("One unauthorised request")
