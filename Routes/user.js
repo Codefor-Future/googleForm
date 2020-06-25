@@ -19,14 +19,28 @@ router.get("/CreateNewForm",auth, (req,res)=>{
 router.get("/form/:userId/:indexOfForm",async(req,res)=>{
    const userId= jwt.verify(req.params.userId,"panni")
    const user= await User.findById(userId)
-
-   if(user){
-       res.render('form',{data:JSON.stringify({form:user.forms[req.params.indexOfForm]})})
+    
+   if(user.name){
+       const data=JSON.stringify({form:user.forms[req.params.indexOfForm]})
+       res.render('form',{data:data})
    }else{
        res.status(404).send()
    }
 })
 
+router.get("/resp/:index",auth, async(req,res)=>{
+    if(!req.auth){
+        res.sendFile(__dirname+"/login.html")
+        console.log("One unauthorised request")
+        return;
+    }
+    const user= await User.findById(req.auth.id)
+    const formIndex= req.params.index;
+    const responses= user.forms[formIndex].responses;
+    const structureOfForm=user.forms[formIndex].inputs;
+    const formName=user.forms[formIndex].formName
+    res.render("formResponses",{data:JSON.stringify({responses:responses,structure:structureOfForm,formName:formName})})
+})
 router.post("/form",async(req,res)=>{
     const urlArray= req.body.url.split("/")
     const userEncoded= urlArray[urlArray.length-2]

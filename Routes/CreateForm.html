@@ -124,8 +124,11 @@
             </div>
         </div>
 
-    <div v-if="formUrl" style="position: absolute; top: 0px; left: 0px; width: 100vw;height: 130vh; background-color: burlywood;">
-        <a :href="formUrl">{{formUrl}}</a>
+    <div v-if="formUrl" style="position: absolute; top: 0px; left: 0px; height: 130vh; background-color: burlywood;">
+        <h3>Form Created</h3>
+        <a :href="formUrl"><button> Go to form </button></a>
+        <a href="/"><button> Go Home</button></a>
+        <p style="font-size: 10px; ">{{formUrl}}</p>
     </div>
     </div>
 

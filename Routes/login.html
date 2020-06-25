@@ -177,11 +177,13 @@ input:focus{
                 loginForm(){
                     document.getElementById("loginForm").style.display="block"
                     document.getElementById("signUpForm").style.display="none"
+                    document.getElementById('welcome').style.display="none"
                 },
                 signUpForm(){
-                    document.getElementById("loginForm").style.dist909090909play="none"
                     document.getElementById("signUpForm").style.display="block"
                     document.getElementById("welcome").style.display="none"
+                    document.getElementById("loginForm").style.display="none"
+
                 },
                 async signUp(){
                     if(!this.name|| this.mobile.length!=10){

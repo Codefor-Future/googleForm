@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js" integrity="sha256-bd8XIKzrtyJ1O5Sh3Xp3GiuMIzWC42ZekvrMMD4GxRg=" crossorigin="anonymous"></script>
+    <title>Responses</title>
+</head>
+<body>
+    <style>
+        #app{
+            text-align: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        .response{
+            position: relative;
+            background-color:rgba(255, 255, 255, 0.247) ;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 8px;
+            border: .5px solid rgba(0, 121, 84, 0.295);
+        }
+        .respheader{
+            margin: 0px;
+            padding: 0px;
+            font-size: 14px;
+            color: rgba(4, 99, 83, 0.87);
+            font-weight: 450;
+        }
+        .respAns{
+            margin: 10px;
+            margin-top: 2px;
+            padding: 0px;
+            font-size: 14px;
+            font-weight: 200;
+            color: rgba(14, 129, 95, 0.822);
+        }
+        .checked{
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .goHomeBtn{
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgb(5, 95, 107);
+            color: rgb(243, 250, 250);
+            font-size: 15px;
+            padding: 15px;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-radius: 50px;
+            border: 0;
+            box-shadow: 2px 2px 6px rgba(1, 75, 59, 0.288);
+        }
+
+    </style>
+
+
+
+    <div id="app">
+        <h1 style="background-color:rgba(41, 178, 153, 0.205) ; margin: 0; padding: 20px; color: rgba(0, 0, 0, 0.61);">{{data.formName}}</h1>
+        <div style="background-color:rgba(41, 178, 153, 0.205) ; padding: 5px; color: rgba(7, 100, 100, 0.74); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;font-size: 13px;">Total responses: {{data.responses.length}}</div>
+
+        <div v-for="(resp,index) in data.responses" class="response">
+            <input type="checkbox" class="checked">
+            <div v-for="(inputField,index) in data.structure">
+                <h3 class="respheader">{{inputField.heading}}</h3>
+                <p class="respAns">{{resp[index]}} <span v-if="resp[index]==''">No Answer</span></p>
+            </div>
+        </div>
+        <a href="/"><button class="goHomeBtn"> Go Home</button></a>
+
+        
+    </div>
+    <script>
+        const app= new Vue({
+            el:"#app",
+            data:{
+                data:JSON.parse('<%- data %>')
+            }
+        })
+    </script>
+</body>
+</html>
