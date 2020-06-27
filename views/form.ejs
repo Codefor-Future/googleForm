@@ -80,8 +80,13 @@
                     <p class="heading">{{input.heading}}
                         <span v-if="input.required" style="color: red;" id="required">&nbsp*</span>
                     </p>
-                    <input class="input" :type="input.inputType" v-if="input.inputType!='textarea'">
-                    <textarea class="input" v-else name="" id="" cols="30" rows="2"></textarea>
+                    <input class="textInput" :type="input.inputType" v-if="input.inputType!='textarea'&& input.inputType!='radio'">
+                    <textarea class="textArea" v-if="input.inputType=='textarea'" name="" id="" cols="30" rows="2"></textarea>
+                    <div class="mcq">
+                        <div v-for="options in input.mcq">
+                            <input type="radio" :name="input.heading" :value='options'>{{options}}
+                        </div>
+                    </div>
                 </div>
                 <button @click="saveResp">Save your response</button>
         </div>
@@ -101,21 +106,46 @@
             methods:{
                 saveResp(){
                     this.inputs.form.responses={}
-                    // console.log(this.inputs.form)
                     for(element in this.inputs.form.inputs){
-                        if(document.getElementById("previewForm").querySelectorAll(".input")[element].value===""){
+                        
+                        const inputElement= document.getElementsByClassName("element")[element]
+                        let inputField=null;
+                        let value=null;
+                        if(this.inputs.form.inputs[element].inputType=='text'||this.inputs.form.inputs[element].inputType=='color'){
+                            inputField=inputElement.getElementsByClassName("textInput")[0]
+                            value=inputField.value;
+                        }else if(this.inputs.form.inputs[element].inputType=='textarea'){
+                            inputField=inputElement.getElementsByClassName("textArea")[0]
+                            value=inputField.value;
+                        }else{
+                            inputField= inputElement.getElementsByClassName("mcq")[0]
+                            for(i in inputField.children){
+                                // console.log("child"+inputField.children[i])
+                                if(!inputField.children[i].children){continue}
+                                if(inputField.children[i].children[0].checked){
+                                    value=inputField.children[i].children[0].value
+                                }else{
+                                    
+                                }
+                            }
+                        }
+                        
+                        //response required check
+                        if(value==""|| value==null){
                             if(this.inputs.form.inputs[element].required){
                                 this.error=true
                                 setTimeout(()=>{
                                     this.error=false
                                 },3000)
                                 return;
+                            }else{
+                                value="Not answered"
                             }
                             
                         }
-                        let value=document.getElementById("previewForm").querySelectorAll(".input")[element].value.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\t/g, "\\t");
-                        this.inputs.form.responses[element]=value
                         
+                         value=value.replace(/\n/g, " ").replace(/\r/g, " ").replace(/\t/g, " ");
+                         this.inputs.form.responses[element]=value
                     }
                     axios.post("/form",{
                         url:window.location.href,
@@ -138,6 +168,7 @@
                 }
                 
             },
+
         })
     
     </script>

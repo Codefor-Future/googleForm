@@ -2,6 +2,7 @@ const express= require('express')
 const User = require("../Models/User")
 const jwt= require("jsonwebtoken")
 const auth= require('../middlewares/auth')
+const json2xls= require('json2xls')
 
 
 router=express.Router();
@@ -36,18 +37,39 @@ router.get("/resp/:index",auth, async(req,res)=>{
     }
     const user= await User.findById(req.auth.id)
     const formIndex= req.params.index;
-    const responses= user.forms[formIndex].responses;
+    const responses= user.forms[formIndex].responses
     const structureOfForm=user.forms[formIndex].inputs;
     const formName=user.forms[formIndex].formName
     
     res.render("formResponses",{data:JSON.stringify({responses:responses,structure:structureOfForm,formName:formName})})
 })
+router.get("/xlsx/:index",auth,json2xls.middleware, async(req,res)=>{
+    if(!req.auth){
+        res.sendFile(__dirname+"/login.html")
+        console.log("One unauthorised request")
+        return;
+    }
+    const user= await User.findById(req.auth.id)
+    const formIndex= req.params.index;
+    const responses= user.forms[formIndex].responses
+    const structureOfForm=user.forms[formIndex].inputs;
+    
+    const excelRsp=[]
+    
+    for(oneResp in responses){
+        let tempResp={}
+        for(field in structureOfForm){
+            tempResp[structureOfForm[field].heading]=responses[oneResp][field]
+        }
+        excelRsp.push(tempResp)
+    }
+    res.xls('response.xlsx' ,excelRsp)
+})
+
 router.post("/form",async(req,res)=>{
     const urlArray= req.body.url.split("/")
     const userEncoded= urlArray[urlArray.length-2]
     const formIn= urlArray[urlArray.length-1]
-
-    
         try{
         const userDecoded= jwt.verify(userEncoded,"panni")
         

@@ -72,7 +72,8 @@
             background-color: rgb(5, 95, 107);
             color: rgb(243, 250, 250);
             font-size: 30px;
-            padding: 10px 19px;
+            font-weight: lighter;
+            padding: 10px 20px 13px 20px;
             border-radius: 50px;
         }
         
@@ -188,7 +189,8 @@
                     tempInput.focus();
                     tempInput.select();
                     document.execCommand('copy')
-                    window.alert("Link copied\n"+tempInput.value)
+                    window.alert(tempInput.value)
+                    console.log("ok")
                 }
             },
             mounted(){

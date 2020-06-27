@@ -97,8 +97,13 @@
                         <span v-if="input.required" style="color: red;" id="required">&nbsp*</span>
                         <span class="remove" v-on:click="removeElement(index)">&nbspX&nbsp</span>
                     </p>
-                    <input :type="input.inputType" v-if="input.inputType!='textarea'">
-                    <textarea v-else name="" id="" cols="30" rows="2"></textarea>
+                    <input :type="input.inputType" v-if="input.inputType!='textarea'&& input.inputType!='radio'">
+                    <textarea v-if="input.inputType=='textarea'" name="" id="" cols="30" rows="2"></textarea>
+                    <div v-if="input.inputType=='radio'">
+                        <div v-for="mcqOp in input.mcq">
+                            <input type="radio" style="width: auto;" value=mcqOp name="op">{{mcqOp}}
+                        </div>
+                    </div>
                 </div>
                 <button @click="save">Save</button>
                 <button @click="showEdit=true">Add new Question</button>
@@ -110,6 +115,7 @@
                     <option value="text">Short Answer</option>
                     <option value="textarea">Long Answer</option>
                     <option value="color">Color</option>
+                    <option value="radio">Multiple Choice</option>
                 </select>
                  
                 <select name="required" id="required" v-model="newElement.required">
@@ -117,7 +123,18 @@
                     <option value=>Not required</option>
                 </select>
                 <br><br>
-                <input type="text" placeholder="Question" :style="headingError" v-model="newElement.heading">
+                <input type="text"  placeholder="Question" :style="headingError" v-model="newElement.heading">
+                <div v-if="newElement.inputType=='radio'">
+                    <div  v-for="mcqOption in newMcq">
+                        <input type="radio" style="width: auto;">{{mcqOption}}
+                    </div>
+                    <input type="radio">
+                    <input type="text" v-model="mcqOption">
+                    <button @click="mcqAddOption">Add Option</button>
+                </div>
+
+                <br>
+
                 <br><br>
                 <button @click="addElement">Add Element</button>
                 <span @click="showEdit=false" class="remove" style="position: absolute;top: 20px;right: 20px;">&nbspX&nbsp</span>
@@ -151,6 +168,11 @@
                         heading:"Address"
                     }
                 ],
+                mcqOption:"First Option",
+                mcq:[
+                   
+                ],
+                newMcq:[],
                 newElement:{
                     inputType:"text",
                     heading:null,
@@ -180,11 +202,16 @@
                             }
                         },3000)
                     }else{
+                        if(this.newElement.inputType=='radio'){
+                            this.newElement.mcq=this.newMcq
+                        }
                         this.inputes.push(this.newElement)
+                        
                         this.newElement={}
                         this.newElement.inputType="text"
                         this.newElement.required=true
                         this.showEdit=false
+                        this.newMcq=[]
                     }
                 },
                 removeElement(index){
@@ -248,6 +275,10 @@
 
                             document.execCommand('copy')
                         
+                },
+                mcqAddOption(){
+                    this.newMcq.push(this.mcqOption)
+                    this.mcqOption="Next Option"
                 }
             }
         })
