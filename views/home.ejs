@@ -156,7 +156,7 @@
                 <div class="formName">{{form.formName}}</div>
                 <div class="formRespCount">{{form.responses.length}}</div>
                 <button @click="showResponse(index)">Show responses</button><br>
-                <a @click="copyLink(index)" class="copyLinkBtn">Copy form link</a>
+                <a @click="copyLink(index)" class="copyLinkBtn">Go to Form</a>
                 <br><br>
             </div>
         </div>
@@ -182,14 +182,7 @@
                     window.location.href=`/resp/${index}`
                 },
                 copyLink(index){
-                    var tempInput= document.createElement('textarea')
-                    tempInput.className="tempInput";
-                    tempInput.textContent =  "https://myfrm.herokuapp.com/form/"+this.dat.userId+ "/"+ index;
-                    tempInput.value= "https://myfrm.herokuapp.com/form/"+this.dat.userId+ "/"+ index
-                    document.body.appendChild(tempInput);
-                    tempInput.focus()
-                    tempInput.select();
-                    document.execCommand("copy")                    
+                    window.location.href="https://myfrm.herokuapp.com/form/"+this.dat.userId+ "/"+ index;                                     
                 }
             },
             mounted(){
