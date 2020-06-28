@@ -84,6 +84,17 @@
             box-shadow: 3px 3px 6px rgba(1, 75, 59, 0.541);
 
         }
+        .mcqPreviewRadio{
+            width: 10vw
+        }
+        .mcqPreviewOption{
+            width: 40vw;
+        }
+        .mcqOptions{
+            color: rgba(0, 0, 0, 0.829);
+            font-size: 14px;
+            margin: 10px;
+        }
     </style>
     <div id="app">
         
@@ -100,7 +111,7 @@
                     <input :type="input.inputType" v-if="input.inputType!='textarea'&& input.inputType!='radio'">
                     <textarea v-if="input.inputType=='textarea'" name="" id="" cols="30" rows="2"></textarea>
                     <div v-if="input.inputType=='radio'">
-                        <div v-for="mcqOp in input.mcq">
+                        <div v-for="mcqOp in input.mcq"  class="mcqOptions">
                             <input type="radio" style="width: auto;" value=mcqOp name="op">{{mcqOp}}
                         </div>
                     </div>
@@ -125,11 +136,11 @@
                 <br><br>
                 <input type="text"  placeholder="Question" :style="headingError" v-model="newElement.heading">
                 <div v-if="newElement.inputType=='radio'">
-                    <div  v-for="mcqOption in newMcq">
+                    <div  v-for="mcqOption in newMcq" style="margin: 10px; color: rgba(0, 0, 0, 0.801);">
                         <input type="radio" style="width: auto;">{{mcqOption}}
                     </div>
-                    <input type="radio">
-                    <input type="text" v-model="mcqOption">
+                    <input type="radio" class="mcqPreviewRadio">
+                    <input type="text" v-model="mcqOption" class="mcqPreviewOption">
                     <button @click="mcqAddOption">Add Option</button>
                 </div>
 

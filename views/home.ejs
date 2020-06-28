@@ -182,15 +182,14 @@
                     window.location.href=`/resp/${index}`
                 },
                 copyLink(index){
-                    var tempInput= document.createElement('input')
+                    var tempInput= document.createElement('textarea')
                     tempInput.className="tempInput";
+                    tempInput.textContent =  "https://myfrm.herokuapp.com/form/"+this.dat.userId+ "/"+ index;
                     tempInput.value= "https://myfrm.herokuapp.com/form/"+this.dat.userId+ "/"+ index
-                    document.body.appendChild(tempInput)
-                    tempInput.focus();
+                    document.body.appendChild(tempInput);
+                    tempInput.focus()
                     tempInput.select();
-                    document.execCommand('copy')
-                    window.alert(tempInput.value)
-                    console.log("ok")
+                    document.execCommand("copy")                    
                 }
             },
             mounted(){

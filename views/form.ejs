@@ -68,6 +68,14 @@
             box-shadow: 3px 3px 6px rgba(1, 75, 59, 0.541);
 
         }
+        .mcqOptions{
+            color: rgba(0, 0, 0, 0.856);
+            font-size: 14px;
+            margin: 10px;
+        }
+        .mcqOptions input{
+            width: 5vw;
+        }
     </style>
     <div id="app" style="text-align: center;">
         <div v-if="respSaved" style="z-index: 1; position: absolute; top: 0px;left: 0px; width: 100vw;height: 130vh; background-color: beige;"> <h5>Response Saved</h5></div>
@@ -83,7 +91,7 @@
                     <input class="textInput" :type="input.inputType" v-if="input.inputType!='textarea'&& input.inputType!='radio'">
                     <textarea class="textArea" v-if="input.inputType=='textarea'" name="" id="" cols="30" rows="2"></textarea>
                     <div class="mcq">
-                        <div v-for="options in input.mcq">
+                        <div v-for="options in input.mcq" class="mcqOptions">
                             <input type="radio" :name="input.heading" :value='options'>{{options}}
                         </div>
                     </div>
